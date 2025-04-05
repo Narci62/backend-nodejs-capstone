@@ -68,10 +68,12 @@ router.post('/', upload.single('file') ,async(req, res,next) => {
 // Get a single secondChanceItem by ID
 router.get('/:id', async (req, res, next) => {
     try {
-        //Step 4: task 1 - insert code here
-        //Step 4: task 2 - insert code here
-        //Step 4: task 3 - insert code here
-        //Step 4: task 4 - insert code here
+        const db = await connectToDatabase();
+        const id = req.params.id;
+
+        const collection = db.collection("secondChanceItems");
+        const secondChanceItem = await collection.find({"id": id}).toArray();
+        res.json(secondChanceItem);        
     } catch (e) {
         next(e);
     }
@@ -80,11 +82,20 @@ router.get('/:id', async (req, res, next) => {
 // Update and existing item
 router.put('/:id', async(req, res,next) => {
     try {
-        //Step 5: task 1 - insert code here
-        //Step 5: task 2 - insert code here
-        //Step 5: task 3 - insert code here
-        //Step 5: task 4 - insert code here
-        //Step 5: task 5 - insert code here
+        const db = await connectToDatabase();
+        const id = req.params.id;
+        let newsecondChanceItem = req.body
+
+        const collection = db.collection("secondChanceItems");
+
+        const update = await collection.updateOne({id:id},{$set:newsecondChanceItem})
+
+        if (update.matchedCount === 0) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+
+        res.status(200).json({ message: "Item updated successfully", result });
+
     } catch (e) {
         next(e);
     }
@@ -93,10 +104,17 @@ router.put('/:id', async(req, res,next) => {
 // Delete an existing item
 router.delete('/:id', async(req, res,next) => {
     try {
-        //Step 6: task 1 - insert code here
-        //Step 6: task 2 - insert code here
-        //Step 6: task 3 - insert code here
-        //Step 6: task 4 - insert code here
+        const db = await this.connectToDatabase();
+        const id = req.params.id;
+
+        const collection = db.collection("secondChanceItems");
+
+        const query = await collection.deleteOne({id:id});
+
+        if(query.matchedCount==0)
+        {
+            res.status(404).json({message:"Item deleted successfully"})
+        }
     } catch (e) {
         next(e);
     }

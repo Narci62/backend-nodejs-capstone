@@ -9,6 +9,7 @@ const logger = require('../logger');
 // Define the upload directory path
 const directoryPath = 'public/images';
 
+
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -26,10 +27,8 @@ const upload = multer({ storage: storage });
 router.get('/', async (req, res, next) => {
     logger.info('/ called');
     try {
-        //Step 2: task 1 - insert code here
-        //Step 2: task 2 - insert code here
-        //Step 2: task 3 - insert code here
-        //Step 2: task 4 - insert code here
+        //connect database
+        const db = await connectToDatabase();
 
         const collection = db.collection("secondChanceItems");
         const secondChanceItems = await collection.find({}).toArray();
@@ -41,14 +40,25 @@ router.get('/', async (req, res, next) => {
 });
 
 // Add a new item
-router.post('/', {Step 3: Task 6 insert code here}, async(req, res,next) => {
+router.post('/', upload.single('file') ,async(req, res,next) => {
     try {
+        //connect database
+        const db = await connectToDatabase();
+        const collection = db.collection("secondChanceItems")
 
-        //Step 3: task 1 - insert code here
-        //Step 3: task 2 - insert code here
-        //Step 3: task 3 - insert code here
-        //Step 3: task 4 - insert code here
-        //Step 3: task 5 - insert code here
+        let secondChanceItem = req.body;
+
+        const lastItemQuery = await collection.find().sort({'id':-1}).limit(1);
+        await lastItemQuery.forEach(item => {
+            secondChanceItem.id = (parseInt(item.id) + 1).toString();
+        });
+
+        const date_added = Math.floor(new Date().getTime()/1000);
+        secondChanceItem.date_added = date_added
+
+        secondChanceItem = await collection.insertOne(secondChanceItem);
+
+
         res.status(201).json(secondChanceItem.ops[0]);
     } catch (e) {
         next(e);

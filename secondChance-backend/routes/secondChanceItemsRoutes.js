@@ -88,7 +88,11 @@ router.put('/:id', async(req, res,next) => {
 
         const collection = db.collection("secondChanceItems");
 
-        const update = await collection.findOneAndUpdate({"id":id},{$set:newsecondChanceItem});
+        const update = await collection.findOneAndUpdate(
+            {"id":id},
+            {$set:newsecondChanceItem},
+            { returnDocument: 'after' }
+        );
 
         res.status(200).json({ message: "Item updated successfully", result });
 

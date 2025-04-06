@@ -72,7 +72,7 @@ router.get('/:id', async (req, res, next) => {
         const id = req.params.id;
 
         const collection = db.collection("secondChanceItems");
-        const secondChanceItem = await collection.find({"id": id}).toArray();
+        const secondChanceItem = await collection.findOne({"id": id}).toArray();
         res.json(secondChanceItem);        
     } catch (e) {
         next(e);
@@ -88,11 +88,7 @@ router.put('/:id', async(req, res,next) => {
 
         const collection = db.collection("secondChanceItems");
 
-        const update = await collection.updateOne({id:id},{$set:newsecondChanceItem})
-
-        if (update.matchedCount === 0) {
-            return res.status(404).json({ message: "Item not found" });
-        }
+        const update = await collection.findOneAndUpdate({"id":id},{$set:newsecondChanceItem});
 
         res.status(200).json({ message: "Item updated successfully", result });
 
@@ -109,12 +105,8 @@ router.delete('/:id', async(req, res,next) => {
 
         const collection = db.collection("secondChanceItems");
 
-        const query = await collection.deleteOne({id:id});
+        const query = await collection.deleteOne({"id":id});
 
-        if(query.matchedCount==0)
-        {
-            res.status(404).json({message:"Item deleted successfully"})
-        }
     } catch (e) {
         next(e);
     }

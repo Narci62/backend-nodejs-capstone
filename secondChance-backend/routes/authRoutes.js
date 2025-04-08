@@ -61,10 +61,10 @@ router.post('/login', async (req, res) => {
         // Task 3: Check for user credentials in database
         const theUser = await collection.findOne({email:req.body.email});
         if(theUser){
-            let result = await bcryptjs.compare({req.body.password,theUser.password});
+            let result = await bcryptjs.compare(req.body.password,theUser.password);
             if(!result){
                 logger.error('Passwords do not match');
-                return res.status(404).jon({error:"Wrong password"}):
+                return res.status(404).json({error:"Wrong password"});
             }
 
             const userName = theUser.firstName;
@@ -94,7 +94,7 @@ router.post('/login', async (req, res) => {
 router.put('/update', async (req, res) => {
     // Task 2: Validate the input using `validationResult` and return an appropriate message if you detect an error
     const errors = validationResult(req);
-    if(errors.isEmpty()){
+    if(!errors.isEmpty()){
         logger.error('Error for validation update requests',errors.array());
         return res.status(400).json({error:errors.array()});
     }
@@ -108,7 +108,7 @@ try {
 
     // Task 4: Connect to MongoDB
     const db = await this.connectToDatabase();
-    const collectio = db.collection('users');
+    const collection = db.collection('users');
     // Task 5: Find the user credentials in database
     const existingUser = await collection.findOne({email});
 

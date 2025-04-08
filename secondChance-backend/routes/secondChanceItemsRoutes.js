@@ -59,7 +59,7 @@ router.post('/', upload.single('file') ,async(req, res,next) => {
         secondChanceItem = await collection.insertOne(secondChanceItem);
 
 
-        res.status(201).json(secondChanceItem.ops[0]);
+        res.status(201).json({ _id: result.insertedId, ...secondChanceItem });
     } catch (e) {
         next(e);
     }
@@ -72,7 +72,7 @@ router.get('/:id', async (req, res, next) => {
         const id = req.params.id;
 
         const collection = db.collection("secondChanceItems");
-        const secondChanceItem = await collection.findOne({"id": id}).toArray();
+        const secondChanceItem = await collection.findOne({id});
         res.json(secondChanceItem);        
     } catch (e) {
         next(e);

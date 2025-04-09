@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname) // Use the original file name
-  },
+  }
 })
 
 const upload = multer({ storage })
@@ -40,7 +40,7 @@ router.get('/', async (req, res, next) => {
 // Add a new item
 router.post('/', upload.single('file'), async (req, res, next) => {
   try {
-    //connect database
+    // connect database
     const db = await connectToDatabase()
     const collection = db.collection('secondChanceItems')
 
@@ -51,12 +51,12 @@ router.post('/', upload.single('file'), async (req, res, next) => {
       secondChanceItem.id = (parseInt(item.id) + 1).toString()
     })
 
-    const date_added = Math.floor(new Date().getTime() / 1000)
-    secondChanceItem.date_added = date_added
+    const dateadded = Math.floor(new Date().getTime() / 1000)
+    secondChanceItem.date_added = dateadded
 
     secondChanceItem = await collection.insertOne(secondChanceItem)
 
-    res.status(201).json({ _id: result.insertedId, ...secondChanceItem })
+    res.status(201).json({ _id: secondChanceItem.insertedId, ...secondChanceItem })
   } catch (e) {
     next(e)
   }
@@ -81,7 +81,7 @@ router.put('/:id', async (req, res, next) => {
   try {
     const db = await connectToDatabase()
     const id = req.params.id
-    let newsecondChanceItem = req.body
+    const newsecondChanceItem = req.body
 
     const collection = db.collection('secondChanceItems')
 
@@ -91,7 +91,7 @@ router.put('/:id', async (req, res, next) => {
       { returnDocument: 'after' }
     )
 
-    res.status(200).json({ message: 'Item updated successfully', result })
+    res.status(200).json({ message: 'Item updated successfully', update })
   } catch (e) {
     next(e)
   }
@@ -105,7 +105,9 @@ router.delete('/:id', async (req, res, next) => {
 
     const collection = db.collection('secondChanceItems')
 
-    const query = await collection.deleteOne({ id })
+    await collection.deleteOne({ id })
+    
+    res.status(200).json({ message: 'Item deleted successfully' })
   } catch (e) {
     next(e)
   }

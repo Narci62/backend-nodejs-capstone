@@ -73,7 +73,7 @@ router.post('/login', async (req, res) => {
             let payload = {
                 user:{
                     id: theUser._id.toString(),
-                },
+                }
             }
 
             const authtoken = jwt.sign(payload, JWT_SECRET)

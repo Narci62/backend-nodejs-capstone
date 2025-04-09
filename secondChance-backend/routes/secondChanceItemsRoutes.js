@@ -106,7 +106,6 @@ router.delete('/:id', async (req, res, next) => {
     const collection = db.collection('secondChanceItems')
 
     await collection.deleteOne({ id })
-    
     res.status(200).json({ message: 'Item deleted successfully' })
   } catch (e) {
     next(e)

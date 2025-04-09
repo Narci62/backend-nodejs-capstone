@@ -13,12 +13,7 @@ const collectionName = 'secondChanceItems'
 const data = JSON.parse(fs.readFileSync(filename, 'utf8')).docs
 
 // connect to database and insert data into the collection
-<<<<<<< HEAD
 async function loadData () {
-=======
-
-async function loadData() {
->>>>>>> 893244e (upd sentiment index)
   const client = new MongoClient(url)
   try {
     // Connect to the MongoDB client

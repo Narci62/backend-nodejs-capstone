@@ -1,13 +1,13 @@
-const express = require("express")
-const multer = require("multer")
-// const path = require("path")
+const express = require('express')
+const multer = require('multer')
+// const path = require('path')
 // const fs = require('fs')
 const router = express.Router()
-const connectToDatabase = require("../models/db")
-const logger = require("../logger")
+const connectToDatabase = require('../models/db')
+const logger = require('../logger')
 
 // Define the upload directory path
-const directoryPath = "public/images"
+const directoryPath = 'public/images'
 
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
@@ -22,8 +22,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 // Get all secondChanceItems
-router.get("/", async (req, res, next) => {
-  logger.info("/called")
+router.get('/', async (req, res, next) => {
+  logger.info('/called')
   try {
     // connect database
     const db = await connectToDatabase()
@@ -32,17 +32,17 @@ router.get("/", async (req, res, next) => {
     const secondChanceItems = await collection.find({}).toArray()
     res.json(secondChanceItems)
   } catch (e) {
-    logger.console.error("oops something went wrong", e)
+    logger.console.error('oops something went wrong', e)
     next(e)
   }
 })
 
 // Add a new item
-router.post("/", upload.single("file"), async (req, res, next) => {
+router.post('/', upload.single('file'), async (req, res, next) => {
   try {
     //connect database
     const db = await connectToDatabase()
-    const collection = db.collection("secondChanceItems")
+    const collection = db.collection('secondChanceItems')
 
     let secondChanceItem = req.body
 
@@ -63,12 +63,12 @@ router.post("/", upload.single("file"), async (req, res, next) => {
 })
 
 // Get a single secondChanceItem by ID
-router.get("/:id", async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const db = await connectToDatabase()
     const id = req.params.id
 
-    const collection = db.collection("secondChanceItems")
+    const collection = db.collection('secondChanceItems')
     const secondChanceItem = await collection.findOne({ id })
     res.json(secondChanceItem)
   } catch (e) {
@@ -77,33 +77,33 @@ router.get("/:id", async (req, res, next) => {
 })
 
 // Update and existing item
-router.put("/:id", async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
   try {
     const db = await connectToDatabase()
     const id = req.params.id
     let newsecondChanceItem = req.body
 
-    const collection = db.collection("secondChanceItems")
+    const collection = db.collection('secondChanceItems')
 
     const update = await collection.findOneAndUpdate(
       { id },
       { $set: newsecondChanceItem },
-      { returnDocument: "after" }
+      { returnDocument: 'after' }
     )
 
-    res.status(200).json({ message: "Item updated successfully", result })
+    res.status(200).json({ message: 'Item updated successfully', result })
   } catch (e) {
     next(e)
   }
 })
 
 // Delete an existing item
-router.delete("/:id", async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const db = await this.connectToDatabase()
     const id = req.params.id
 
-    const collection = db.collection("secondChanceItems")
+    const collection = db.collection('secondChanceItems')
 
     const query = await collection.deleteOne({ id })
   } catch (e) {
